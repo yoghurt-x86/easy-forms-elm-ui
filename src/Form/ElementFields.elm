@@ -1,26 +1,25 @@
 module Form.ElementFields exposing (..)
 
-
+import Element exposing (Element)
+import Element.Events exposing (onLoseFocus)
+import Element.Input
 import Form.Field as Form exposing (Field, FieldMsg(..), Value, ViewConfig)
 import Form.SimpleFields exposing (TextType(..))
-import Element exposing (Element)
-import Element.Input 
-import Element.Events exposing (onLoseFocus)
 
 
-type alias TextFieldConfig = 
+type alias TextFieldConfig =
     Form.SimpleFields.TextFieldConfig
 
 
-type alias TextField form ctx = 
+type alias TextField form ctx =
     Field form String TextFieldConfig String String ctx ctx (Element (FieldMsg String))
 
 
-type TextFieldState = 
-    Value String TextFieldConfig
+type TextFieldState
+    = Value String TextFieldConfig
 
 
-textField : TextFieldConfig -> String -> TextField form ctx 
+textField : TextFieldConfig -> String -> TextField form ctx
 textField config value =
     { view = textFieldView
     , state =
@@ -58,13 +57,13 @@ textFieldView _ field =
                 Search ->
                     "search"
     in
-    Element.column 
+    Element.column
         []
-        [ Element.Input.text 
+        [ Element.Input.text
             [ onLoseFocus Blur ]
-            { onChange = FieldMsg 
+            { onChange = FieldMsg
             , text = field.state.value
-            , placeholder = 
+            , placeholder =
                 Maybe.map
                     (Element.Input.placeholder [] << Element.text)
                     field.placeholder
@@ -76,8 +75,8 @@ textFieldView _ field =
             }
         , Maybe.map Element.text field.description
             |> Maybe.withDefault Element.none
-        , Element.column [] 
-            (List.map 
+        , Element.column []
+            (List.map
                 Element.text
                 field.hints
             )
